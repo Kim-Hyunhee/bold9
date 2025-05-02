@@ -1,46 +1,116 @@
+"""
+유저 정보를 나타내는 타입
+"""
 type User {
+  """
+  유저 ID
+  """
   id: ID!
+  """
+  유저 이메일
+  """
   email: String!
-  name: String
+  """
+  유저 이름
+  """
+  name: String!
+  """
+  비밀번호 (암호화 저장 필요)
+  """
+  password: String!
+  """
+  생성일시
+  """
   createdAt: String!
+  """
+  작성한 게시글 목록
+  """
   posts: [Post!]!
 }
 
+"""
+게시글 정보를 나타내는 타입
+"""
 type Post {
+  """
+  게시글 ID
+  """
   id: ID!
+  """
+  제목
+  """
   title: String!
-  content: String
+  """
+  내용
+  """
+  content: String!
+  """
+  게시 여부
+  """
   published: Boolean!
-  author: User!
+  """
+  작성자 ID
+  """
+  authorId: ID!
+  """
+  생성일시
+  """
   createdAt: String!
+  """
+  게시글에 달린 댓글 목록
+  """
   comments: [Comment!]!
 }
 
+"""
+댓글 정보를 나타내는 타입
+"""
 type Comment {
+  """
+  댓글 ID
+  """
   id: ID!
+  """
+  댓글 내용
+  """
   content: String!
-  post: Post!
+  """
+  어떤 게시글에 달린 댓글인지
+  """
+  postId: ID!
+  """
+  생성일시
+  """
   createdAt: String!
 }
 
-type Query {
-  # 모든 사용자 조회
-  users: [User!]!
-  # 특정 사용자 조회
-  user(id: ID!): User
-  # 모든 게시글 조회
+"""
+특정 유저의 게시글과 댓글을 묶은 타입
+"""
+type UserPostsAndComments {
+  user: User!
   posts: [Post!]!
-  # 특정 게시글 조회
-  post(id: ID!): Post
-  # 특정 게시글의 댓글 조회
-  commentsByPost(postId: ID!): [Comment!]!
+  comments: [Comment!]!
+}
+
+type Query {
+  """
+  유저의 게시글과 댓글 조회
+  """
+  getUserPostsAndComments(userId: ID!): UserPostsAndComments!
 }
 
 type Mutation {
-  # 사용자 생성
-  createUser(email: String!, password: String!, name: String): User!
-  # 게시글 생성
-  createPost(title: String!, content: String, authorId: ID!): Post!
-  # 댓글 생성
+  """
+  새로운 유저 생성
+  """
+  createUser(email: String!, password: String!, name: String!): User!
+  """
+  게시글 작성
+  """
+  createPost(title: String!, content: String!, authorId: ID!): Post!
+  """
+  댓글 작성
+  """
   createComment(content: String!, postId: ID!): Comment!
 }
